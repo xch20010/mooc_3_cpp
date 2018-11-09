@@ -1,0 +1,40 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <cstdlib>
+using namespace std;
+
+class Sample {
+public:
+	int v;
+	// 在此处补充你的代码
+	Sample() {};
+	Sample(int d)
+	{
+		v = d;
+	}
+	Sample(const Sample& A)
+	{
+		v = 2 + A.v;
+	}
+};
+void PrintAndDouble(Sample o)
+{
+	cout << o.v;
+	cout << endl;
+}
+int main()
+{
+	Sample a(5);
+	Sample b = a;
+	PrintAndDouble(b);
+	Sample c = 20;
+	PrintAndDouble(c);
+	Sample d;
+	d = a;
+	cout << d.v;
+	return 0;
+}
