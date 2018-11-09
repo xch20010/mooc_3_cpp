@@ -1,0 +1,38 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <cstdlib>
+using namespace std;
+
+class Complex {
+private:
+	double r, i;
+public:
+	void Print() {
+		cout << r << "+" << i << "i" << endl;
+	}
+	// 在此处补充你的代码
+	Complex() {}
+	Complex(char *s)
+	{
+		//r = p[0] - '0';
+		//i = p[2] - '0';
+		char temp[20];
+		strcpy(temp, s);
+		char* p = strtok(temp, "+");
+		r = atof(p);
+		p = strtok(NULL, " ");
+		i = atof(p);
+	
+	}
+};
+int main() {
+	Complex a;
+	a = "3+4i"; a.Print();
+	a = "5+6i"; a.Print();
+	return 0;
+
+}
