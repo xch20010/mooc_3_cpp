@@ -1,0 +1,35 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <cstdlib>
+using namespace std;
+
+class A {
+public:
+	int val;
+
+	A(int num = 123) :val(num) {}
+
+	A& GetObj()   //注意这里要返回引用，否则返回的是一个通过复制构造函数得到的临时对象
+	{
+		return *this;  
+	}
+
+		// 在此处补充你的代码
+};
+int main()
+{
+	int m, n;
+	A a;
+	cout << a.val << endl;
+	while (cin >> m >> n) {
+		a.GetObj() = m;
+		cout << a.val << endl;
+		a.GetObj() = A(n);
+		cout << a.val << endl;
+	}
+	return 0;
+}
