@@ -1,0 +1,28 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <cstdlib>
+using namespace std;
+
+
+struct A
+{
+	int v;
+	A(int vv) :v(vv) { }
+	// 在此处补充你的代码
+	const A* getPointer ()const
+	{
+		return this;
+	}
+};
+
+int main()
+{
+	const A a(10);
+	const A * p = a.getPointer();  //常量对象只能使用构造函数，析构函数和有const说明的函数。因为a是const对象，所以函数也必须是const函数。
+	cout << p->v << endl;
+	return 0;
+}
