@@ -1,0 +1,113 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+//红方司令部按照iceman、lion、wolf、ninja、dragon的顺序循环制造武士。 
+//蓝方司令部按照lion、dragon、ninja、iceman、wolf的顺序循环制造武士。 
+string kind[5] = { "dragon" ,"ninja","iceman" ,"lion","wolf" };
+int initlife[5] = { 3,4,5,6,7 };
+
+class HeadQuarter
+{
+public:
+	int Lifen;
+	int Num_warrior[5];  //每种武士的个数
+	int Numall;   //一共有多少个武士
+	int K;  //该制造的武士的种类的编号 0,1,2,3,4中的一个,是Seq中的顺序
+	int Seq[5];  //默认2,3,4,1,0为红色；蓝色则为3,0,1,2,4
+	bool Color;  //0表示红方，1表示蓝方
+	bool Stop; //1表示结束（当前lifen小于制造武士所需的最小life），默认为0表示继续
+
+	HeadQuarter(int lifen, bool color = false,int k=0) :Numall(0),Lifen(lifen), Color(color), Stop(0),K(k)
+	{
+		memset(Num_warrior, 0, sizeof(Num_warrior));//    Memset 用来对一段内存空间全部设置为某个字符，一般用在对定义的字符串进行初始化为‘ ’或‘/0’；
+		memset(Seq, 0, sizeof(Seq));
+	}
+	void GenerateWarrior(int time) 
+	{
+		string name;
+		if (Color == 0)
+			name = "red";
+		else
+			name = "blue";
+		Lifen -= initlife[Seq[K]];
+		Num_warrior[Seq[K]]++;
+		Numall++;
+		cout << "00" << time << " " << name << " " << kind[Seq[K]] << " " << Numall << " born with strength " << initlife[Seq[K]] << "," << Num_warrior[Seq[K]] << " " << kind[Seq[K]] << " in " << name << " headquarter"<<endl;
+	}
+	void UpdateK()
+	{
+		int min = *min_element(initlife, initlife + 5);
+		if (Lifen < min)
+		{
+			Stop = true;
+			return;
+		}
+		for (int i = 1; i < 6; i++)
+		{
+			K++;
+			//cout << Color << "K=" << K << endl;
+			K = K % 5;
+			if (Lifen >= initlife[Seq[K]])
+				break;
+		}
+	}
+};
+
+int main()
+{
+	int sumlife = 20;
+	int redseq[5] = { 2,3,4,1,0 };
+	int blueseq[5] = { 3,0,1,2,4 };
+	HeadQuarter red(sumlife,0,0);
+	HeadQuarter blue(sumlife, 1, 0);
+	for (int i = 0; i < 5; i++)
+	{	
+		red.Seq[i] = redseq[i];
+		blue.Seq[i] = blueseq[i];
+	}		
+	int t = 0; //time
+	int redflag = 0;
+	int blueflag = 0;
+	while (1)
+	{
+		if (red.Stop)
+		{
+			if (redflag != 1)
+			{
+				cout << "00" << t << " " << "red headquarter stops making warriors" << endl;
+				redflag = 1;
+			}
+		}
+		else
+		{
+			red.GenerateWarrior(t);
+			red.UpdateK();
+		}
+
+		if (blue.Stop)
+		{
+			if (blueflag != 1)
+			{
+				cout << "00" << t << " " << "blue headquarter stops making warriors" << endl;
+				blueflag = 1;
+			}
+		}
+		else
+		{
+			blue.GenerateWarrior(t);
+			blue.UpdateK();
+		}
+		
+		t++;
+		if (blueflag&&redflag)
+			break;
+	}
+	return 0;
+
+}
