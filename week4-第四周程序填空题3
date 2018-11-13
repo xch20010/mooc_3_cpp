@@ -1,0 +1,67 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+
+class Array2 {
+	// 在此处补充你的代码
+	int* q;
+	int r, c; //row column
+public:
+	Array2() { q = NULL; }
+	Array2(int r_, int c_) :r(r_), c(c_)
+	{
+		q = new int[r*c];
+	}
+	Array2& operator=(const Array2& a)
+	{
+		if (q)
+			delete[]q;
+		r = a.r;
+		c = a.c;
+		q = new int[r*c];
+		memcpy(q, a.q, sizeof(int)*r*c);
+		return *this;
+	}
+	~Array2()
+	{
+		if (q)
+			delete[]q;
+	}
+	int* operator[](int i)
+	{
+		return q + i*c;
+	}
+	int& operator()(int i, int j)
+	{
+		return q[i*c + j];
+	}
+};
+
+int main() {
+	Array2 a(3, 4);
+	int i, j;
+	for (i = 0; i < 3; ++i)
+		for (j = 0; j < 4; j++)
+			a[i][j] = i * 4 + j;
+	for (i = 0; i < 3; ++i) {
+		for (j = 0; j < 4; j++) {
+			cout << a(i, j) << ",";
+		}
+		cout << endl;
+	}
+	cout << "next" << endl;
+	Array2 b;     b = a;
+	for (i = 0; i < 3; ++i) {
+		for (j = 0; j < 4; j++) {
+			cout << b[i][j] << ",";
+		}
+		cout << endl;
+	}
+	return 0;
+}
