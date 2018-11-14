@@ -1,0 +1,117 @@
+#include "stdafx.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <sstream>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+
+const int MAX = 210;
+class CHugeInt {
+private:
+	int *a, l;
+public:
+	CHugeInt() {
+		a = new int[MAX];
+		l = 1;
+		memset(a, 0, sizeof(int) * MAX);
+	}
+	CHugeInt(const CHugeInt& x) {
+		a = new int[MAX];
+		memset(a, 0, sizeof(int) * MAX);
+		l = x.l;
+		for (int i = 1; i <= l; i++)
+			a[i] = x.a[i];
+	}
+	~CHugeInt() {
+		if (a)delete[] a;
+	}
+	CHugeInt(int n) {
+		a = new int[MAX];
+		memset(a, 0, sizeof(int) * MAX);
+		if (!n)l = 1;
+		else l = 0;
+		while (n) {
+			a[++l] = n % 10;
+			n /= 10;
+		}
+	}
+	CHugeInt(char *c) {
+		a = new int[MAX];
+		memset(a, 0, sizeof(int) * MAX);
+		l = strlen(c);
+		//cout << "length" << l << endl;
+		for (int i = l - 1; i >= 0; i--)
+			a[l  - i] = c[i] - '0';
+	}
+	int& operator[](int x) {
+		return a[x];
+	}
+	CHugeInt& operator =(const CHugeInt& x) {
+		a = new int[MAX];
+		memset(a, 0, sizeof(*a));
+		l = x.l;
+		for (int i = 1; i <= l; i++)
+			a[i] = x.a[i];
+		return *this;
+	}
+	friend CHugeInt operator +(CHugeInt a, CHugeInt b) {
+		CHugeInt c;
+		c.l = max(a.l, b.l);
+		for (int i = 1; i <= c.l; i++)
+			c[i] = a[i] + b[i];
+		for (int i = 1; i <= c.l; i++)
+			if (c[i] >= 10)
+			{
+				if (i == c.l)c.l++;
+				c[i + 1] += c[i] / 10;
+				c[i] %= 10;
+			}
+		return c;
+	}
+	friend ostream& operator << (ostream& os, CHugeInt x) {
+		for (int i = x.l; i >= 1; i--)
+			os << x.a[i];
+		return os;
+	}
+	friend CHugeInt operator +(CHugeInt a, int b) {
+		return a + CHugeInt(b);
+	}
+	friend CHugeInt operator +(int a, CHugeInt b) {
+		return CHugeInt(a) + b;
+	}
+	CHugeInt operator +=(int x) {
+		*this = *this + CHugeInt(x);
+		return *this;
+	}
+	CHugeInt& operator ++() {
+		*this = *this + CHugeInt(1);
+		return *this;
+	}
+	CHugeInt operator ++(int) {
+		CHugeInt tmp = *this;
+		*this = CHugeInt(1) + *this;
+		return tmp;
+	}
+};
+int  main()
+{
+	char s[210];
+	int n;
+
+	while (cin >> s >> n) {
+		CHugeInt a(s);
+		CHugeInt b(n);
+
+		cout << a + b << endl;
+		cout << n + a << endl;
+		cout << a + n << endl;
+		b += n;
+		cout << ++b << endl;
+		cout << b++ << endl;
+		cout << b << endl;
+	}
+	return 0;
+}
