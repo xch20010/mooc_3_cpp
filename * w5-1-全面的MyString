@@ -6,73 +6,75 @@ using namespace std;
 
 class MyString
 {
-	char* ptr;
 public:
-	MyString() { ptr = ""; }  //不能设为空指针
-	MyString(const char* buf)
-	{
-		ptr = new char[strlen(buf) + 1];
-		strcpy(ptr, buf);
-	}
+	MyString() { sValue = ""; };  //不能设为NULL
+	MyString(const char *s) {
+		sValue = new char[strlen(s) + 1];
+		strcpy(sValue, s);
+	};
+
 	MyString(const MyString& ms)
 	{
-		ptr = new char[strlen(ms.ptr) + 1];
-		strcpy(ptr, ms.ptr);
+		sValue = new char[strlen(ms.sValue) + 1];
+		strcpy(sValue, ms.sValue);
 	}
-	~MyString()
-	{
-		if (ptr)
-			delete[]ptr;
-	}
-	friend MyString operator+(MyString& m1, MyString& m2)
+
+
+	MyString operator()(int m, int n)
 	{
 		MyString res;
-		int len = strlen(m1.ptr) + strlen(m2.ptr) ;
-		res.ptr = new char[len+1];
-		strcpy(res.ptr, m1.ptr);
-		strcat(res.ptr, m2.ptr);
+		res.sValue = new char[n + 1];
+		for (int i = 0; i < n; i++)
+			res.sValue[i] = sValue[m + i];
+		res.sValue[n] = 0;  //关键，必须有
 		return res;
 	}
+
+	char& operator[](int i) { return sValue[i]; }
+	friend ostream& operator<<(ostream &os, const MyString &s)
+	{
+		if (s.sValue == NULL)
+			return os;
+		else
+		{
+			os << s.sValue;
+			return os;
+		}
+	}
+
 	friend MyString operator+(MyString& m, char* buf)
 	{
 		MyString res(buf);
 		res = res + m;
 		return res;
 	}
-
-	friend MyString operator+( char* buf, MyString& m)
-	{
-		MyString res(buf);
-		res = res + m;
-		return res;
-	}
-	friend ostream& operator<<(ostream& os, MyString m)
-	{
-		if(m.ptr)
-			os << m.ptr;
-			return os;
-		return os;
-	}
-
-	char& operator[](int n) { return ptr[n]; }
-
-	MyString operator()(int m, int n)
+	friend MyString operator+(const MyString& m1, const MyString& m2  //形参设置为const，不然结果不对
 	{
 		MyString res;
-		res.ptr = new char[n+1] ;
-		for (int i = 0; i < n; i++)
-			res.ptr[i] = ptr[m + i];
+		int len = strlen(m1.sValue) + strlen(m2.sValue);
+		res.sValue = new char[len + 1];
+		strcpy(res.sValue, m1.sValue);
+		strcat(res.sValue, m2.sValue);
 		return res;
 	}
 
-	MyString operator+=(char* buf)
+	friend MyString operator+(const char*str,  MyString &rhs)
+	{
+		MyString res(str);
+		res = res + rhs;
+		return res;
+	}
+
+
+	MyString operator+=(const char* buf)
 	{
 		MyString res(buf);
 		res = res + *this;
 		return res;
 	}
+
 	bool operator < (const MyString & rhs) {
-		int flag = strcmp(ptr, rhs.ptr);
+		int flag = strcmp(sValue, rhs.sValue);
 		if (flag == -1)
 			return true;
 		else
@@ -81,7 +83,7 @@ public:
 		}
 	}
 	bool operator > (const MyString & rhs) {
-		int flag = strcmp(ptr, rhs.ptr);
+		int flag = strcmp(sValue, rhs.sValue);
 		if (flag == 1)
 			return true;
 		else
@@ -90,7 +92,7 @@ public:
 		}
 	}
 	bool operator ==(const MyString & rhs) {
-		int flag = strcmp(ptr, rhs.ptr);
+		int flag = strcmp(sValue, rhs.sValue);
 		if (flag == 0)
 			return true;
 		else
@@ -98,6 +100,8 @@ public:
 			return false;
 		}
 	}
+private:
+	char* sValue;
 };
 
 
