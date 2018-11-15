@@ -1,0 +1,146 @@
+#include"stdafx.h"
+#include<iostream>
+#include<cstring>
+#include<cstdlib>
+using namespace std;
+
+class MyString
+{
+	char* ptr;
+public:
+	MyString() { ptr = ""; }  //不能设为空指针
+	MyString(const char* buf)
+	{
+		ptr = new char[strlen(buf) + 1];
+		strcpy(ptr, buf);
+	}
+	MyString(const MyString& ms)
+	{
+		ptr = new char[strlen(ms.ptr) + 1];
+		strcpy(ptr, ms.ptr);
+	}
+	~MyString()
+	{
+		if (ptr)
+			delete[]ptr;
+	}
+	friend MyString operator+(MyString& m1, MyString& m2)
+	{
+		MyString res;
+		int len = strlen(m1.ptr) + strlen(m2.ptr) ;
+		res.ptr = new char[len+1];
+		strcpy(res.ptr, m1.ptr);
+		strcat(res.ptr, m2.ptr);
+		return res;
+	}
+	friend MyString operator+(MyString& m, char* buf)
+	{
+		MyString res(buf);
+		res = res + m;
+		return res;
+	}
+
+	friend MyString operator+( char* buf, MyString& m)
+	{
+		MyString res(buf);
+		res = res + m;
+		return res;
+	}
+	friend ostream& operator<<(ostream& os, MyString m)
+	{
+		if(m.ptr)
+			os << m.ptr;
+			return os;
+		return os;
+	}
+
+	char& operator[](int n) { return ptr[n]; }
+
+	MyString operator()(int m, int n)
+	{
+		MyString res;
+		res.ptr = new char[n+1] ;
+		for (int i = 0; i < n; i++)
+			res.ptr[i] = ptr[m + i];
+		return res;
+	}
+
+	MyString operator+=(char* buf)
+	{
+		MyString res(buf);
+		res = res + *this;
+		return res;
+	}
+	bool operator < (const MyString & rhs) {
+		int flag = strcmp(ptr, rhs.ptr);
+		if (flag == -1)
+			return true;
+		else
+		{
+			return false;
+		}
+	}
+	bool operator > (const MyString & rhs) {
+		int flag = strcmp(ptr, rhs.ptr);
+		if (flag == 1)
+			return true;
+		else
+		{
+			return false;
+		}
+	}
+	bool operator ==(const MyString & rhs) {
+		int flag = strcmp(ptr, rhs.ptr);
+		if (flag == 0)
+			return true;
+		else
+		{
+			return false;
+		}
+	}
+};
+
+
+int compareString(const void * e1, const void * e2)
+{
+	MyString *s1 = (MyString *)e1;
+	MyString *s2 = (MyString *)e2;
+	if (*s1 < *s2)
+		return -1;
+	else if (*s1 == *s2)
+		return 0;
+	else if (*s1>*s2)
+		return 1;
+}
+
+int main()
+{
+	MyString s1("abcd-"), s2, s3("efgh-"), s4(s1);
+	MyString SArray[4] = { "big","me","about","take" };
+	cout << "1. " << s1 << s2 << s3 << s4 << endl;
+	s4 = s3; s3 = s1 + s3;
+	cout << "2. " << s1 << endl;
+	cout << "3. " << s2 << endl;
+	cout << "4. " << s3 << endl;
+	cout << "5. " << s4 << endl;
+	cout << "6. " << s1[2] << endl;
+	s2 = s1; s1 = "ijkl-";
+	s1[2] = 'A';
+	cout << "7. " << s2 << endl;
+	cout << "8. " << s1 << endl;
+	s1 += "mnop";
+	cout << "9. " << s1 << endl;
+	s4 = "qrst-" + s2;
+	cout << "10. " << s4 << endl;
+	s1 = s2 + s4 + " uvw " + "xyz";
+	cout << "11. " << s1 << endl;
+	qsort(SArray, 4, sizeof(MyString), compareString);
+	for (int i = 0; i < 4; ++i)
+		cout << SArray[i] << endl;
+	//输出s1从下标0开始长度为4的子串
+	cout << s1(0, 4) << endl;
+	//输出s1从下标为5开始长度为10的子串
+	cout << s1(5, 10) << endl;
+	system("pause");
+	return 0;
+}
