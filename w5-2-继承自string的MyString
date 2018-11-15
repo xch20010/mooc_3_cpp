@@ -9,7 +9,8 @@ class MyString :public string
 public:
 	MyString():string(){}
 	MyString(const char* s):string(s){}
-	MyString (const string &s):string(s){}
+	//MyString (const MyString &s):string(s){}  //对于MyString operator()(int m, int n) 报错误
+	MyString(const string &s) :string(s) {}
 	MyString operator()(int m, int n)
 	{
 		return substr(m, n);
