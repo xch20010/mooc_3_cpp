@@ -1,0 +1,23 @@
+#include"stdafx.h"
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+template <class T>
+T SumArray(	T* begin,T* end)	// 在此处补充你的代码
+{
+	T tmp = *begin;
+	++begin;
+	for (; begin != end; ++begin)
+		tmp += *begin;
+	return tmp;
+}
+int main() {
+	string array[4] = { "Tom","Jack","Mary","John" };
+	cout << SumArray(array, array + 4) << endl;
+	int a[4] = { 1, 2, 3, 4 };  //提示：1+2+3+4 = 10
+	cout << SumArray(a, a + 4) << endl;
+	return 0;
+}
